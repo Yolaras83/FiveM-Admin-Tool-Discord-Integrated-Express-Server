@@ -26,6 +26,9 @@ This Express server handles **Discord integration** for the FiveM `/player` admi
 
 ## 🔧 Setup
 
-### 1. Clone the repository
-```bash
-git clone YOUR_EXPRESS_SERVER_REPO_LINK
+### 1. Download the files
+### 2. Run the following commands: 
+
+- npm init -y
+- npm i express discord.js cors
+  
