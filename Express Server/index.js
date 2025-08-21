@@ -19,7 +19,10 @@ const client = new Client({
     ],
 });
 
-const staffRole = '1286365936059940875';
+const staffRole = 'enter your staff role id';
+const GUILD_ID = 'enter your server id';
+const SUPPORT_CATEGORY = "enter your category id";
+const TOKEN = "enter your bot's token";
 let supportChannel;
 
 app.post('/send-message', async(req, res) => {
@@ -27,7 +30,7 @@ app.post('/send-message', async(req, res) => {
     const { discordId, message, adminName } = req.body;
     
     try {
-        const guild = await client.guilds.cache.get('1286365306767540384');
+        const guild = await client.guilds.cache.get(GUILD_ID);
         const member = await guild.members.cache.get(discordId);
         const messageEmbed = new EmbedBuilder().setAuthor({ name: adminName}).setColor('Red').setDescription(message).setTitle('Message from Admin: ' + adminName).setTimestamp();
         await member.send({
@@ -43,11 +46,11 @@ app.post('/create-support', async(req, res) => {
     const discordId = req.body.discordId;
 
     try {
-        const guild = await client.guilds.cache.get('1286365306767540384');
+        const guild = await client.guilds.cache.get(GUILD_ID);
         const member = await guild.members.cache.get(discordId); 
         supportChannel = await guild.channels.create({
             name: `📞Support-${member.user.tag}`,
-            parent: '1286366197058764901',
+            parent: SUPPORT_CATEGORY,
             type: ChannelType.GuildVoice,
             permissionOverwrites: [
                 {
@@ -83,14 +86,20 @@ client.on('voiceStateUpdate', async(oldState, newState) => {
     if(!supportChannel) return;
 
     if(oldState.channel.id == supportChannel.id) {
-        if(oldState.channel.members.size == 0) {
-            await oldState.channel.delete();
+        try {
+            if(oldState.channel.members.size == 0) {
+                await oldState.channel.delete();
+            }
+        }
+        catch (error) {
+            console.error(error);
         }
     }
 });
 
-client.login('MTQwODA1MzY2OTAzMDUzMTExMg.G3tHG3.KKhoIStiqcVgdaQ6wZz519eCaMROcM6E9LqfgY');
+client.login(TOKEN);
 
 app.listen(3000, () => {
     console.log('Server started on http://localhost:3000');
 });
+
